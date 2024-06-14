@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+{% block banner %}{% include 'banner.html' %}{% endblock %}
+{% block content %}
+  <h1>Profile</h1>
+  <p>First Name: {{ user.first_name }}</p>
+  <p>Last Name: {{ user.last_name }}</p>
+  <p>Email: {{ user.email }}</p>
+  <h2>Your Applications</h2>
+  <ul>
+    {% for application in user.applications %}
+    <li class="mb-2">
+      {{ application.job.title }} ({{ application.job.location }})
+      <form action="/delete_application" method="POST" style="display: inline; margin-left: 0.75rem">
+        <input type="hidden" name="application_id" value="{{ application.id }}" />
+        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
