@@ -92,27 +92,30 @@ def delete_application():
     return redirect(url_for('profile'))
 
 # JSON type data /api/ endpoints
-# Jobs
 @app.route("/api/jobs", methods=["GET", "POST"])
+@login_required
 def handle_jobs():
     jobs = load_jobs_from_db()
     return jsonify(jobs)
 
-@app.route("/api/jobs/<int:id>", methods=["GET", "PUT", "PATCH", "DELETE"])
+@app.route("/api/jobs/<int:id>", methods=["GET"])
+@login_required
 def handle_job(id):
     fetched_job = load_job_from_db(id)
     return jsonify(fetched_job) if fetched_job else "Not Found", 404
 
 # Applications
-@app.route("/api/applications", methods=["GET", "POST"])
+@app.route("/api/applications", methods=["GET"])
+@login_required
 def handle_applications():
     applications = load_applications_from_db()
     return jsonify(applications)
 
-@app.route("/api/applications/<int:id>", methods=["GET", "PUT", "PATCH", "DELETE"])
+@app.route("/api/applications/<int:id>", methods=["GET"])
+@login_required
 def handle_application(id):
     fetched_application = load_application_from_db(id)
     return jsonify(fetched_application) if fetched_application else "Not Found", 404
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8000)
+    app.run(debug=True, host="0.0.0.0", port=5123)

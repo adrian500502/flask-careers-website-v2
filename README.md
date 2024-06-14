@@ -1,2 +1,2 @@
-# flask-careers-website-v2
-Flask Careers Website Version 2
+# flask-webapp-with-job-offerings
+Python + Flask + SQLite + SQLAlchemy webapp with job offerings.
