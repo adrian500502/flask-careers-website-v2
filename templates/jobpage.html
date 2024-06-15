@@ -19,9 +19,11 @@
   </ol>
   <h4>Salary</h4>
   <p>{{ job.currency }}{{ job.salary }}</p>
-{% if current_user.is_authenticated %}
-  {% include "application_form.html" %}
-{% else %}
-  <h2 class="text-center mt-2">Login before applying for a job!</h2>
-{% endif %}
+  {% if current_user.is_authenticated %}
+    {% if not current_user.is_admin %}
+      {% include "application_form.html" %}
+      {% else %}
+      <h2 class="text-center mt-2">Administrators cannot apply for jobs.</h2>
+    {% endif %}
+  {% endif %}
 {% endblock %}

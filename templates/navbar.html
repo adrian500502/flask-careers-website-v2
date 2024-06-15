@@ -21,6 +21,11 @@
           <a class="btn btn-secondary me-2" href="/">Home</a>
         </li>
         {% if current_user.is_authenticated %}
+          {% if current_user.is_admin %}
+            <li class="nav-item">
+              <a class="btn btn-info me-2" href="/admin/applications">Applications</a>
+            </li>
+          {% endif %}
         <li class="nav-item">
           <a class="btn btn-warning me-2" href="/profile">Profile</a>
         </li>

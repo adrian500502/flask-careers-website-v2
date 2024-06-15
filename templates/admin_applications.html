@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Admin Applications{% endblock %}
+{% block content %}
+  <h1 class="mt-2">All Applications</h1>
+  <ul>
+    {% for application in applications %}
+    <li class="mb-2">
+      <div onclick="toggleDetails({{ application.id }})" style="cursor: pointer;">
+        {{ application.full_name }} - {{ application.job.title }} ({{ application.job.location }})
+        <span class="badge {% if application.status == 'Accepted' %}bg-success{% elif application.status == 'Rejected' %}bg-danger{% else %}bg-primary{% endif %}">
+          {{ application.status }}
+        </span>
+      </div>
+      <div id="details-{{ application.id }}" style="display: none; margin-top: 1rem;">
+        <p><strong>Email:</strong> {{ application.email }}</p>
+        <p><strong>LinkedIn:</strong> <a href="{{ application.linkedin_url }}" target="_blank">{{ application.linkedin_url }}</a></p>
+        <p><strong>Education:</strong> {{ application.education }}</p>
+        <p><strong>Work Experience:</strong> {{ application.work_experience }}</p>
+        <p><strong>Resume URL:</strong> <a href="{{ application.resume_url }}" target="_blank">{{ application.resume_url }}</a></p>
+        <div class="btn-group" role="group" aria-label="Application Actions">
+          {% if application.status == 'Pending' %}
+          <form action="/accept_application" method="POST" style="display: inline; margin-left: 0.75rem">
+            <input type="hidden" name="application_id" value="{{ application.id }}" />
+            <button type="submit" class="btn btn-success btn-sm">Accept</button>
+          </form>
+          <form action="/reject_application" method="POST" style="display: inline; margin-left: 0.75rem">
+            <input type="hidden" name="application_id" value="{{ application.id }}" />
+            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  <script>
+    function toggleDetails(applicationId) {
+      var details = document.getElementById('details-' + applicationId);
+      if (details.style.display === 'none') {
+        details.style.display = 'block';
+      } else {
+        details.style.display = 'none';
+      }
+    }
+  </script>
+{% endblock %}

@@ -13,10 +13,15 @@
       </p>
     </div>
     <div class="d-none d-md-block col-md-6">
-      <img src="/static/people.jpg" style="height: 320px; border-radius: 4px" />
+      <img src="/static/person.png" style="height: 320px; border-radius: 4px" />
     </div>
   </div>
   <h2 class="text-center mt-2 mb-4">Job Offers</h2>
+  {% if current_user.is_authenticated and current_user.is_admin %}
+  <div class="text-center mb-4">
+    <a href="/add_job" class="btn btn-success">Add Job Offer</a>
+  </div>
+  {% endif %}
   <p>{% for job in jobs %} {% include 'jobitem.html' %} {% endfor %}</p>
   <div class="text-center">
     <a

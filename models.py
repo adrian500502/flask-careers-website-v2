@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean, Enum
 from flask_login import UserMixin
 
 db = SQLAlchemy()
@@ -30,6 +30,7 @@ class User(db.Model, UserMixin):
   last_name = Column(String(150), nullable=False)
   email = Column(String(150), unique=True, nullable=False)
   password = Column(String(150), nullable=False)
+  is_admin = Column(Boolean, default=False)
   applications = db.relationship('Application', backref='user', lazy=True)
 
   def to_dict(self):
@@ -38,6 +39,7 @@ class User(db.Model, UserMixin):
             'email': self.email,
             'first_name': self.first_name,
             'last_name': self.last_name,
+            'is_admin': self.is_admin,
             'applications': [Application.to_dict() for app in self.applications]
         }
 
@@ -51,6 +53,7 @@ class Application(db.Model):
     education = Column(Text, nullable=False)
     work_experience = Column(Text, nullable=False)
     resume_url = Column(String(200), nullable=False)
+    status = Column(Enum('Pending', 'Accepted', 'Rejected', name='application_status'), default='Pending')
     job = db.relationship('Job', backref='applications')
 
     def to_dict(self):
@@ -63,5 +66,6 @@ class Application(db.Model):
             'linkedin_url': self.linkedin_url,
             'education': self.education,
             'work_experience': self.work_experience,
-            'resume_url': self.resume_url
+            'resume_url': self.resume_url,
+            'status': self.status
         }

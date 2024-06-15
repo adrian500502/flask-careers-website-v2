@@ -14,7 +14,7 @@ def add_initial_data():
         db.session.commit()
 
     if User.query.count() == 0:
-        user = User(first_name="Adam", last_name="Kowalski", email="admin@example.com", password="Admin123!", )
+        user = User(first_name="Adam", last_name="Kowalski", email="admin@example.com", password="Admin123!", is_admin=True)
         db.session.add(user)
         db.session.commit()
 
@@ -61,7 +61,8 @@ def add_application_to_db(job_id, data, user_id):
         linkedin_url=data['linkedin_url'],
         education=data['education'],
         work_experience=data['work_experience'],
-        resume_url=data['resume_url']
+        resume_url=data['resume_url'],
+        status='Pending'
     )
     db.session.add(application)
     db.session.commit()
@@ -73,9 +74,4 @@ def load_applications_from_db():
 def load_application_from_db(id):
     application = Application.query.filter_by(id=id).first()
     return application.to_dict() if application else None
-
-def delete_application_from_db(application_id, user_id):
-    application = Application.query.filter_by(id=application_id, user_id=user_id).first()
-    if application:
-        db.session.delete(application)
-        db.session.commit()
+    

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
-from database import add_initial_data, load_jobs_from_db, load_job_from_db, add_application_to_db, load_applications_from_db, load_application_from_db, delete_application_from_db, add_user_to_db
+from database import add_initial_data, load_jobs_from_db, load_job_from_db, add_application_to_db, load_applications_from_db, load_application_from_db, add_user_to_db
 from models import db, Job, Application, User
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
@@ -83,13 +83,155 @@ def logout():
 def profile():
     return render_template("profile.html", user=current_user)
 
+@app.route("/add_job", methods=["GET", "POST"])
+@login_required
+def add_job():
+    if not current_user.is_admin:
+        flash('You do not have permission to view this page.', 'error')
+        return redirect(url_for('enter_home'))
+
+    if request.method == "POST":
+        title = request.form.get('title')
+        location = request.form.get('location')
+        salary = request.form.get('salary')
+        currency = request.form.get('currency')
+        responsibilities = request.form.get('responsibilities')
+        requirements = request.form.get('requirements')
+
+        job = Job(
+            title=title,
+            location=location,
+            salary=salary,
+            currency=currency,
+            responsibilities=responsibilities,
+            requirements=requirements
+        )
+        db.session.add(job)
+        db.session.commit()
+
+        flash('Job offer added successfully.', 'success')
+        return redirect(url_for('enter_home'))
+    
+    return render_template('add_job.html')
+
+@app.route("/edit_job/<int:job_id>", methods=["GET", "POST"])
+@login_required
+def edit_job(job_id):
+    if not current_user.is_admin:
+        flash('You do not have permission to view this page.', 'error')
+        return redirect(url_for('enter_home'))
+
+    job = Job.query.get_or_404(job_id)
+
+    if request.method == "POST":
+        job.title = request.form.get('title')
+        job.location = request.form.get('location')
+        job.salary = request.form.get('salary')
+        job.currency = request.form.get('currency')
+        job.responsibilities = request.form.get('responsibilities')
+        job.requirements = request.form.get('requirements')
+        db.session.commit()
+        
+        flash('Job offer updated successfully.', 'success')
+        return redirect(url_for('enter_home'))
+    
+    return render_template('edit_job.html', job=job)
+
+@app.route("/delete_job/<int:job_id>", methods=["POST"])
+@login_required
+def delete_job(job_id):
+    if not current_user.is_admin:
+        flash('You do not have permission to perform this action.', 'error')
+        return redirect(url_for('enter_home'))
+
+    job = Job.query.get_or_404(job_id)
+    applications = Application.query.filter_by(job_id=job.id).all()
+
+    if applications:
+        flash('Cannot delete job offer. There are applications associated with this job.', 'error')
+        return redirect(url_for('enter_home'))
+
+    db.session.delete(job)
+    db.session.commit()
+    
+    flash('Job offer deleted successfully.', 'success')
+    return redirect(url_for('enter_home'))
+
+
+
+@app.route("/edit_application/<int:application_id>", methods=["POST"])
+@login_required
+def edit_application(application_id):
+    data = request.form
+    application = Application.query.filter_by(id=application_id, user_id=current_user.id).first()
+    if application and application.status == 'Pending':
+        application.full_name = data['full_name']
+        application.email = data['email']
+        application.linkedin_url = data['linkedin_url']
+        application.education = data['education']
+        application.work_experience = data['work_experience']
+        application.resume_url = data['resume_url']
+        db.session.commit()
+        flash("Application has been updated.", category="success")
+    else:
+        flash("Application not found or you don't have permission to edit it.", "error")
+    return redirect(url_for('profile'))
+
 @app.route("/delete_application", methods=["POST"])
 @login_required
 def delete_application():
     application_id = request.form.get('application_id')
-    delete_application_from_db(application_id, current_user.id)
+    application = Application.query.filter_by(id=application_id, user_id=current_user.id).first()
+    if application and application.status == 'Pending':
+        db.session.delete(application)
+        db.session.commit()
     flash("Application deleted successfully.", "success")
     return redirect(url_for('profile'))
+
+@app.route("/admin/applications")
+@login_required
+def admin_applications():
+    if not current_user.is_admin:
+        flash('You do not have permission to view this page.', 'error')
+        return redirect(url_for('enter_home'))
+
+    applications = Application.query.all()
+    return render_template("admin_applications.html", applications=applications)
+
+@app.route("/accept_application", methods=["POST"])
+@login_required
+def accept_application():
+    if not current_user.is_admin:
+        flash('You do not have permission to perform this action.', 'error')
+        return redirect(url_for('enter_home'))
+
+    application_id = request.form.get('application_id')
+    application = Application.query.filter_by(id=application_id).first()
+    if application:
+        application.status = 'Accepted'
+        db.session.commit()
+        flash('Application accepted.', 'success')
+    else:
+        flash('Application not found.', 'error')
+    return redirect(url_for('admin_applications'))
+
+@app.route("/reject_application", methods=["POST"])
+@login_required
+def reject_application():
+    if not current_user.is_admin:
+        flash('You do not have permission to perform this action.', 'error')
+        return redirect(url_for('enter_home'))
+
+    application_id = request.form.get('application_id')
+    application = Application.query.filter_by(id=application_id).first()
+    if application:
+        application.status = 'Rejected'
+        db.session.commit()
+        flash('Application rejected.', 'info')
+    else:
+        flash('Application not found.', 'error')
+    return redirect(url_for('admin_applications'))
+
 
 # JSON type data /api/ endpoints
 @app.route("/api/jobs", methods=["GET", "POST"])

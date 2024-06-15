@@ -1,0 +1,33 @@
+{% extends 'base.html' %} {% block title %}Add Job{% endblock %} {% block banner %}{% include 'banner.html' %}{%
+endblock %} {% block content %}
+<h1 class="text-center mt-3 mb-4">Add Job Offer</h1>
+<form action="/add_job" method="POST">
+  <div class="mb-3">
+    <label for="title" class="form-label">Job Title&ast;</label>
+    <input type="text" class="form-control" id="title" name="title" required />
+  </div>
+  <div class="mb-3">
+    <label for="location" class="form-label">Location&ast;</label>
+    <input type="text" class="form-control" id="location" name="location" required />
+  </div>
+  <div class="mb-3">
+    <label for="salary" class="form-label">Salary</label>
+    <input type="text" class="form-control" id="salary" name="salary" />
+  </div>
+  <div class="mb-3">
+    <label for="currency" class="form-label">Currency</label>
+    <input type="text" class="form-control" id="currency" name="currency" />
+  </div>
+  <div class="mb-3">
+    <label for="responsibilities" class="form-label">Responsibilities&ast;</label>
+    <textarea class="form-control" id="responsibilities" name="responsibilities" rows="3" required></textarea>
+  </div>
+  <div class="mb-3">
+    <label for="requirements" class="form-label">Requirements&ast;</label>
+    <textarea class="form-control" id="requirements" name="requirements" rows="3" required></textarea>
+  </div>
+  <div class="text-center">
+    <button type="submit" class="btn btn-primary">Add Job</button>
+  </div>
+</form>
+{% endblock %}
