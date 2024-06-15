@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for, f
 from database import add_initial_data, load_jobs_from_db, load_job_from_db, add_application_to_db, load_applications_from_db, load_application_from_db, add_user_to_db
 from models import db, Job, Application, User
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from sqlalchemy import case
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///job_applications.db'
@@ -195,7 +196,16 @@ def admin_applications():
         flash('You do not have permission to view this page.', 'error')
         return redirect(url_for('enter_home'))
 
-    applications = Application.query.all()
+    status_order = case(
+        (Application.status == 'Rejected', 1),
+        (Application.status == 'Accepted', 2),
+        (Application.status == 'Pending', 3),
+    )
+
+    applications = Application.query.order_by(
+        status_order,
+        Application.id.asc()
+    ).all()
     return render_template("admin_applications.html", applications=applications)
 
 @app.route("/accept_application", methods=["POST"])
