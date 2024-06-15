@@ -270,4 +270,4 @@ def handle_application(id):
     return jsonify(fetched_application) if fetched_application else "Not Found", 404
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5123)
+    app.run(debug=True, host="0.0.0.0", port=8111)
