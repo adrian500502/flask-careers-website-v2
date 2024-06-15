@@ -1,0 +1,10 @@
+__pycache__
+instance
+*.pyc
+*.pyo
+*.pyd
+*.db
+.env
+env
+.venv
+venv
