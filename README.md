@@ -9,7 +9,7 @@ Use the following commands to build the image and run locally:
 
 (When already in the project directory):
 
-`docker built -t job-offers-app .`
+`docker build -t job-offers-app .`
 
 `docker run -p 8111:8111 job-offers-app`
 
