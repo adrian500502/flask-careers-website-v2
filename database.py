@@ -3,9 +3,12 @@ from models import db, Job, User, Application
 def add_initial_data():
     if Job.query.count() == 0:
         jobs = [
-            Job(title="Software Engineer", location="Remote", salary="70000", currency="USD", responsibilities="Develop software\nWrite tests", requirements="3 years experience\nPython knowledge"),
-            Job(title="Data Scientist", location="New York", salary="90000", currency="USD", responsibilities="Analyze data\nCreate models", requirements="2 years experience\nPython knowledge"),
-            Job(title="Product Manager", location="San Francisco", salary="110000", currency="USD", responsibilities="Manage product\nCommunicate with stakeholders", requirements="5 years experience\nProduct management experience")
+            Job(title="Software Engineer", location="Remote", salary="7000", currency="$", responsibilities="Develop software\nWrite tests", requirements="3 years experience\nPython knowledge"),
+            Job(title="Data Scientist", location="New York", salary="9000", currency="PLN", responsibilities="Analyze data\nCreate models", requirements="2 years experience\nPython knowledge"),
+            Job(title="Fullstack Developer", location="Warsaw", salary="12000", currency="PLN", responsibilities="Analyze data\nCreate models", requirements="5 years experience\nPython knowledge"),
+            Job(title="Product Manager", location="San Francisco", salary="7500", currency="GBP", responsibilities="Manage product\nCommunicate with stakeholders", requirements="5 years experience\nProduct management experience"),
+            Job(title="Frontend Developer", location="San Francisco", salary="6300", currency="GBP", responsibilities="Manage product\nCommunicate with stakeholders", requirements="5 years experience\nProduct management experience"),
+            Job(title="Backend Developer", location="San Francisco", salary="6500", currency="GBP", responsibilities="Manage product\nCommunicate with stakeholders", requirements="5 years experience\nProduct management experience")
         ]
         db.session.add_all(jobs)
         db.session.commit()
@@ -14,15 +17,6 @@ def add_initial_data():
         user = User(first_name="Adam", last_name="Kowalski", email="admin@example.com", password="Admin123!", )
         db.session.add(user)
         db.session.commit()
-    
-    # if Application.query.count() == 0:
-    #     applications = [
-    #         Application(job_id=1, user_id=1, full_name="John Doe", email="john@example.com", linkedin_url="https://linkedin.com/in/johndoe", education="BS in Computer Science", work_experience="3 years at TechCorp", resume_url="https://example.com/resume/johndoe"),
-    #         Application(job_id=2, user_id=1, full_name="Jane Smith", email="jane@example.com", linkedin_url="https://linkedin.com/in/janesmith", education="MS in Data Science", work_experience="2 years at DataCorp", resume_url="https://example.com/resume/janesmith"),
-    #         Application(job_id=3, user_id=2, full_name="Alice Johnson", email="alice@example.com", linkedin_url="https://linkedin.com/in/alicejohnson", education="MBA", work_experience="5 years at BusinessCorp", resume_url="https://example.com/resume/alicejohnson")
-    #     ]
-    #     db.session.add_all(applications)
-    #     db.session.commit()
 
 # Jobs
 def load_jobs_from_db():
