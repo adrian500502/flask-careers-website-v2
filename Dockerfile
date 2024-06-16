@@ -5,7 +5,6 @@ WORKDIR $APP_HOME
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
-RUN mkdir -p $APP_HOME/instance
 
 EXPOSE 8111
 ENV FLASK_APP=app.py
