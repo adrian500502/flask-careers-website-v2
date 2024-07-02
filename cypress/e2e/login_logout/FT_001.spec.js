@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('Verify that admin user can login successfully and then logout.', () => {
+describe('Verify that existing admin user can successfully login and logout.', () => {
   it('Check if home page URL is correct.', () => {
     cy.url().then(url => cy.wrap(url).should('eq', 'http://localhost:8111/'));
   });

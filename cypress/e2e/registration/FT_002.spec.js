@@ -195,7 +195,7 @@ describe('Verify that new user can register successfully.', () => {
     });
   });
 
-  describe('Verify that user can successfully logout out of the site after being enrolled.', () => {
+  describe('Verify that freshly registered user can logout afterwards.', () => {
     it('Click on the "Logout" navbar button.', () => {
       cy.intercept('GET', '**/logout').as('getLogout');
       cy.get('nav').contains('Logout').click();
