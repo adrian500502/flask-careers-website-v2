@@ -1,10 +1,13 @@
 __pycache__
-instance
+instance/
 *.pyc
 *.pyo
 *.pyd
 *.db
 .env
-env
 .venv
+env
 venv
+.gitignore
+LICENSE
+README.md
