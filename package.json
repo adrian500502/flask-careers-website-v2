@@ -1,0 +1,15 @@
+{
+  "name": "flask-careers-website-v2",
+  "version": "1.0.0",
+  "description": "Cypress E2E tests for Python + Flask + SQLite + SQLAlchemy webapp with job offerings.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "adrian500502",
+  "license": "ISC",
+  "devDependencies": {
+    "chance": "^1.1.11",
+    "cypress": "^13.13.0"
+  }
+}
